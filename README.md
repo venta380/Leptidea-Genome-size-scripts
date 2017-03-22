@@ -17,5 +17,3 @@ Format: Multiplicity	K-mer counts 		Sample_ID 		Population
 # plots_generator.R
 This is the R script that contains the code that estimates the genome size from the K-mer histogram. It uses the above mentioned files within its pipeline. 
 Dependencies: R libraries ggplot2, ggfortify, cluster, grid
-
-![Alt text](./K-mer_explanation.pdf "Optional title")
