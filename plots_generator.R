@@ -1,7 +1,5 @@
-library(ggplot2)
-library(ggfortify)
-kmer<-read.table(file='/proj/b2014034/nobackup/jellyfish_genome_size_predict/genome_size_newdata_trimmed_K17_subsample_1/test.hist', header=FALSE)
-sample_details<-read.table(file='/proj/b2014034/nobackup/jellyfish_genome_size_predict/genome_size_newdata_trimmed_K17_subsample_1/reads.txt', header=FALSE)
+kmer<-read.table(file='/proj/b2014034/nobackup/jellyfish_genome_size_predict/genome_size_newdata_trimmed_K17_subsample_2/test.hist', header=FALSE)
+sample_details<-read.table(file='/proj/b2014034/nobackup/jellyfish_genome_size_predict/genome_size_newdata_trimmed_K17_subsample_2/reads.txt', header=FALSE)
 K=17
 # Multiple plot function
 #
@@ -212,47 +210,63 @@ Juvernica_G_size
 
 genome_sizes <- c(Irish_juvernica_G_size/1000000, Swedish_sinapis_G_size/1000000, Sinapis_106_G_size/1000000, Reali_G_size/1000000, Juvernica_G_size/1000000, Sinapis_56_G_size/1000000)
 depth <- c(Irish_juvernica_depth, Swedish_sinapis_depth, Sinapis_106_depth, Reali_depth, Juvernica_depth, Sinapis_56_depth)
-populations <- c(rep("Juvernica(Ireland)", 10), rep("Sinapis(Sweden)", 10) , rep("Sinapis (K = 106)", 10), rep("Reali(Spanish)", 10), rep("Juvernica(Kazak)", 10), rep("Sinapis (K = 56)", 10))
+populations <- c(rep("LjIre", 10), rep("LsSwe", 10) , rep("LsSpa", 10), rep("LrSpa", 10), rep("LjKaz", 10), rep("LsKaz", 10))
 samples <- c(Irish_juvernica_samples, Swedish_sinapis_samples, Sinapis_106_samples, Reali_samples, Juvernica_samples, Sinapis_56_samples )
-final_data = data.frame(genome_sizes, depth, populations, samples)
+colours <- c(rep("#C8C800",10),rep("#006400",10), rep("#0000FF",10), rep("#FF8C00",10), rep("#C04000",10), rep("#FF0000",10))
+final_data = data.frame(genome_sizes, depth, populations, samples, colours)
 
+final_data$colours= factor(final_data$colours,levels = c("#C04000", "#FF8C00", "#FF0000", "#0000FF", "#C8C800", "#006400"),ordered = TRUE)
+final_data$populations= factor(final_data$populations,levels = c("LsSwe", "LsKaz", "LsSpa", "LrSpa", "LjIre", "LjKaz"),ordered = TRUE)
+
+
+final_table_scaled<-subset(final_data ,final_data$population=='LsSwe')
+
+
+scaling_val1=mean(final_table_scaled$genome_sizes)
+scaling_val2=642750272/1000000
+
+genome_sizes_scaled=c(((final_data$genome_sizes)/scaling_val1)*scaling_val2)
+
+scaled_new=data.frame(final_data,genome_sizes_scaled)
+
+final_data=scaled_new
 
 irish_plot <- ggplot(Irish_juvernica, aes(x=Kmers, y=abundence, colour=group, group=sample)) + 
-  geom_line(color='firebrick1') + geom_vline(x = (mean(Irish_juvernica_peakes)), colour="firebrick1") +
+  geom_line(color='firebrick1') + geom_vline(xintercept = mean(Irish_juvernica_peakes), colour="firebrick1") +
   ggtitle("K-mer plot for Irish juvernica")
 irish_plot
 
 swe_sin_plot <- ggplot(Swedish_sinapis, aes(x=Kmers, y=abundence, colour=group, group=sample)) + 
-  geom_line(color='hotpink') + geom_vline(x = (mean(Swedish_sinapis_peakes)), colour="hotpink") +
+  geom_line(color='hotpink') + geom_vline(xintercept = (mean(Swedish_sinapis_peakes)), colour="hotpink") +
   ggtitle("K-mer plot for Swedish Sinapis")
 swe_sin_plot
 
 Sinapis_106_plot <- ggplot(Sinapis_106, aes(x=Kmers, y=abundence, colour=group, group=sample)) + 
-  geom_line(color='cyan') + geom_vline(x = (mean(Sinapis_106_peakes)), colour="cyan") +
+  geom_line(color='cyan') + geom_vline(xintercept = (mean(Sinapis_106_peakes)), colour="cyan") +
   ggtitle("K-mer plot for Sinapis_106")
 Sinapis_106_plot
 
 Reali_plot <- ggplot(Reali, aes(x=Kmers, y=abundence, colour=group, group=sample)) + 
-  geom_line(color='forestgreen') + geom_vline(x = (mean(Reali_peakes)), colour="forestgreen") +
+  geom_line(color='forestgreen') + geom_vline(xintercept = (mean(Reali_peakes)), colour="forestgreen") +
   ggtitle("K-mer plot for Reali")
 Reali_plot
 
 Juvernica_plot <- ggplot(Juvernica, aes(x=Kmers, y=abundence, colour=group, group=sample)) + 
-  geom_line(color='gold4') + geom_vline(x = (mean(Juvernica_peakes)), colour="gold4") +
+  geom_line(color='gold4') + geom_vline(xintercept = (mean(Juvernica_peakes)), colour="gold4") +
   ggtitle("K-mer plot for Juvernica")
 Juvernica_plot
 
 Sinapis_56_plot <- ggplot(Sinapis_56, aes(x=Kmers, y=abundence, colour=group, group=sample)) + 
-  geom_line(color='cornflowerblue') + geom_vline(x = (mean(Sinapis_56_peakes)), colour="cornflowerblue") +
+  geom_line(color='cornflowerblue') + geom_vline(xintercept = (mean(Sinapis_56_peakes)), colour="cornflowerblue") +
   ggtitle("K-mer plot for Sinapis_56")
 Sinapis_56_plot
 
-combigned_plot <- ggplot(data, aes(x=Kmers, y=abundence, colour=group, group=sample)) + geom_vline(x = (mean(Irish_juvernica_peakes)), colour="firebrick1") + geom_vline(x = (mean(Swedish_sinapis_peakes)), colour="hotpink") + geom_vline(x = (mean(Sinapis_106_peakes)), colour="cyan") + geom_vline(x = (mean(Sinapis_56_peakes)), colour="cornflowerblue") + geom_vline(x = (mean(Reali_peakes)), colour="forestgreen") + geom_vline(x = (mean(Juvernica_peakes)), colour="gold4") + 
-  geom_line() +
-  ggtitle("K-mer plot (combigned)")
-combigned_plot
+#combigned_plot <- ggplot(data, aes(x=Kmers, y=abundence, colour=group, group=sample)) + geom_vline(x = (mean(Irish_juvernica_peakes)), colour="firebrick1") + geom_vline(x = (mean(Swedish_sinapis_peakes)), colour="hotpink") + geom_vline(x = (mean(Sinapis_106_peakes)), colour="cyan") + geom_vline(x = (mean(Sinapis_56_peakes)), colour="cornflowerblue") + geom_vline(x = (mean(Reali_peakes)), colour="forestgreen") + geom_vline(x = (mean(Juvernica_peakes)), colour="gold4") + 
+#  geom_line() +
+#  ggtitle("K-mer plot (combigned)")
+#combigned_plot
 
-boxplot1 <- ggplot(final_data, aes(factor(populations), depth)) + geom_boxplot((aes(fill = factor(populations)))) + ggtitle("depth comparisions (K = 17, All trimmed data pooled)") + labs(x = "Populations", y = "Depth [X]")
+boxplot1 <- ggplot(final_data, aes(populations, depth)) + geom_boxplot((aes(fill = populations))) + ggtitle("depth comparisions (K = 17, All trimmed data pooled)") + labs(x = "Populations", y = "Depth [X]")+ scale_fill_manual(values = levels(final_table$colours), labels= levels(final_table$populations)) + guides(fill=FALSE)+theme_bw()
 boxplot1
 
 
@@ -261,12 +275,14 @@ boxplot1
 
 
 
+
+
 ALL_R<-read.table(file='/proj/b2014034/private/repeats/ALL_R.txt', header=FALSE)
-#Ire-juv-61C     8789    51272   17480   33161   3739    74      45      0       828     31943   300000   IRISH_JUVERNICA 
 
 
 library(ggplot2)
 library(ggfortify)
+library(cluster)
 
 
 samples <- ALL_R$V1
@@ -274,71 +290,101 @@ LTR <- ALL_R$V2
 LINES <- ALL_R$V3
 SINES <- ALL_R$V4
 DNA <- ALL_R$V5
-others <- ALL_R$V11
+Helitron <- ALL_R$V6
+
 total <- ALL_R$V12
 population <- ALL_R$V13
-
-all_repeats <- (LTR+LINES+SINES+DNA+ALL_R$V6+ALL_R$V7+ALL_R$V8+ALL_R$V9+ALL_R$V10+others)/total
 
 LTR_fractions <- LTR/total
 LINES_fractions <- LINES/total
 SINES_fractions <- SINES/total
 DNA_fractions <- DNA/total
-others_fractions <- others/total
+Helitron_fractions <- Helitron/total
 
+calculation_table = data.frame(LTR_fractions, LINES_fractions, SINES_fractions, DNA_fractions, Helitron_fractions, samples, population)
 
-calculation_table = data.frame(LTR_fractions, LINES_fractions, SINES_fractions, DNA_fractions, samples, population, all_repeats, others_fractions)
-
-final_table = merge(calculation_table, final_data)
-
-boxplot <- ggplot(final_table, aes(population, genome_sizes)) + geom_boxplot((aes(fill = population))) + ggtitle("Genome size comparisions (K = 17, All trimmed data pooled)") + labs(x = "Populations", y = "Genome size [MB]")
-
-
-boxplot_all_repeats <- ggplot(final_table, aes(population, all_repeats)) + geom_boxplot((aes(fill = population))) + ggtitle("All repeats box plot") + labs(x = "Populations", y = "ALL repeats fraction")
-boxplot_others <- ggplot(final_table, aes(population, others_fractions)) + geom_boxplot((aes(fill = population))) + ggtitle("others box plot") + labs(x = "Populations", y = "Others fraction")
-
-boxplot_LTR <- ggplot(final_table, aes(population, LTR_fractions)) + geom_boxplot((aes(fill = population))) + ggtitle("LTR box plot") + labs(x = "Populations", y = "LTR fraction")
-boxplot_LINE <- ggplot(final_table, aes(population, LINES_fractions)) + geom_boxplot((aes(fill = population))) + ggtitle("LINE box plot") + labs(x = "Populations", y = "LINES fraction")
-boxplot_SINE <- ggplot(final_table, aes(population, SINES_fractions)) + geom_boxplot((aes(fill = population))) + ggtitle("SINE box plot") + labs(x = "Populations", y = "SINES fraction")
-
-corelation_all = ggplot(final_table, aes(x=genome_sizes, y=all_repeats )) + geom_point(aes(colour = population))+ geom_smooth(method=lm,formula=y ~ x) + ggtitle("all_repeats vs Genome Size")
-corelation_all_value = cor(final_table$all_repeats, final_table$genome_sizes)
-corelation_LTR = ggplot(final_table, aes(x=genome_sizes, y=LTR_fractions )) + geom_point(aes(colour = population))+ geom_smooth(method=lm,formula=y ~ x) + ggtitle("LTR vs Genome Size")
-corelation_LTR_value = cor(final_table$LTR_fractions, final_table$genome_sizes)
-corelation_LINE = ggplot(final_table, aes(x=genome_sizes, y=LINES_fractions )) + geom_point(aes(colour = population))+ geom_smooth(method=lm,formula=y ~ x) + ggtitle("LINES vs Genome Size") 
-corelation_LINE_value = cor(final_table$LINES_fractions, final_table$genome_sizes)
-corelation_SINE = ggplot(final_table, aes(x=genome_sizes, y=SINES_fractions )) + geom_point(aes(colour = population))+ geom_smooth(method=lm,formula=y ~ x) + ggtitle("SINES vs Genome Size") 
-corelation_SINE_value = cor(final_table$SINES_fractions, final_table$genome_sizes)
-#corelation_SINEvsLINE = ggplot(final_table, aes(x=LINES_fractions, y=SINES_fractions )) + geom_point(aes(colour = population))+ geom_smooth(method=lm,formula=y ~ x) + ggtitle("SINES vs LINES") 
-corelation_all_without_KJ = ggplot(final_table, aes(x=genome_sizes, y=all_repeats )) + geom_point(aes(colour = population))+ geom_smooth(method=lm,formula=y ~ x) + ggtitle("all_repeats vs Genome Size")
-corelation_all_value_without_KJ = cor(final_table$all_repeats, final_table$genome_sizes)
-corelation_LTR_without_KJ = ggplot(final_table, aes(x=genome_sizes, y=LTR_fractions )) + geom_point(aes(colour = population))+ geom_smooth(method=lm,formula=y ~ x) + ggtitle("LTR vs Genome Size")
-corelation_LTR_value_without_KJ = cor(final_table$LTR_fractions, final_table$genome_sizes)
-corelation_LINE_without_KJ = ggplot(final_table, aes(x=genome_sizes, y=LINES_fractions )) + geom_point(aes(colour = population))+ geom_smooth(method=lm,formula=y ~ x) + ggtitle("LINES vs Genome Size") 
-corelation_LINE_value_without_KJ = cor(final_table$LINES_fractions, final_table$genome_sizes)
-corelation_SINE_without_KJ = ggplot(final_table, aes(x=genome_sizes, y=SINES_fractions )) + geom_point(aes(colour = population))+ geom_smooth(method=lm,formula=y ~ x) + ggtitle("SINES vs Genome Size") 
-corelation_SINE_value_without_KJ = cor(final_table$SINES_fractions, final_table$genome_sizes)
+final_table = merge(calculation_table, final_data, )
 
 
 
 
-multiplot(boxplot, boxplot_LINE, boxplot_SINE, corelation_LINE, corelation_SINE, framed, cols=3)
-library(cluster)
-
-pca.data <- data.frame( final_table$LTR_fractions, final_table$LINES_fractions, final_table$SINES_fractions , final_table$genome_sizes, final_table$population)
+pca.data <- data.frame( final_table$LTR_fractions, final_table$LINES_fractions, final_table$SINES_fractions , final_table$DNA_fractions,  final_table$Helitron_fractions,final_table$population, final_table$samples)
 pca.data
 
-
-juvernica <- subset(pca.data, pca.data$final_table.population=="KAZAK_JUVERNICA" | pca.data$final_table.population=="IRISH_JUVERNICA" )
+juvernica <- subset(pca.data, pca.data$final_table.population=="IRISH_JUVERNICA"  | pca.data$final_table.population=="KAZAK_JUVERNICA")
 juvernica
 
+
+
+boxplot <- ggplot(final_table, aes(populations, genome_sizes_scaled)) + geom_boxplot((aes(fill = populations))) + ggtitle("") + labs(x = "", y = "Genome size (Mb)")+ scale_fill_manual(values = levels(final_table$colours), labels= levels(final_table$populations)) + guides(fill=FALSE)+theme_bw(base_size = 18)+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+
+
+boxplot_LTR <- ggplot(final_table, aes(populations, LTR_fractions)) + geom_boxplot((aes(fill = (populations)))) + ggtitle("") + labs(x = "", y = "LTR fraction")+       scale_fill_manual(values = levels(final_table$colours), labels= levels(final_table$populations)) + guides(fill=FALSE)+theme_bw(base_size = 18)+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+boxplot_LINE <- ggplot(final_table, aes(populations, LINES_fractions)) + geom_boxplot((aes(fill = (populations)))) + ggtitle("") + labs(x = "", y = "LINES fraction") + scale_fill_manual(values = levels(final_table$colours), labels= levels(final_table$populations)) + guides(fill=FALSE)+theme_bw(base_size = 18)+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+boxplot_SINE <- ggplot(final_table, aes(populations, SINES_fractions)) + geom_boxplot((aes(fill = (populations)))) + ggtitle("") + labs(x = "", y = "SINES fraction")+  scale_fill_manual(values = levels(final_table$colours), labels= levels(final_table$populations)) + guides(fill=FALSE)+theme_bw(base_size = 18)+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+boxplot_DNA <- ggplot(final_table, aes(populations, DNA_fractions)) + geom_boxplot((aes(fill = (populations)))) + ggtitle("") + labs(x = "", y = "DNA fraction") + scale_fill_manual(values = levels(final_table$colours), labels= levels(final_table$populations)) + guides(fill=FALSE)+theme_bw(base_size = 18)+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+boxplot_Helitron <- ggplot(final_table, aes(populations, Helitron_fractions)) + geom_boxplot((aes(fill = (populations)))) + ggtitle("") + labs(x = "", y = "Helitron fraction")+  scale_fill_manual(values = levels(final_table$colours), labels= levels(final_table$populations)) + guides(fill=FALSE)+theme_bw(base_size = 18)+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+
+
+
+corelation_LTR = ggplot(final_table, aes(x=genome_sizes_scaled, y=LTR_fractions )) + geom_point(aes(colour = populations))+ geom_smooth(method=lm,formula=y ~ x) + ggtitle("")    +labs(x = "Genome size (Mb)", y = "LTR fraction")+ scale_colour_manual(values = levels(final_table$colours)) +theme_bw(base_size = 18)+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+theme(legend.title = element_blank(), legend.key = element_rect(colour = "white"))
+corelation_LINE = ggplot(final_table, aes(x=genome_sizes_scaled, y=LINES_fractions )) + geom_point(aes(colour = populations))+ geom_smooth(method=lm,formula=y ~ x) + ggtitle("") +labs(x = "Genome size (Mb)", y = "LINES fraction")+ scale_colour_manual(values = levels(final_table$colours)) +theme_bw(base_size = 18)+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+ theme(legend.position='none')
+corelation_SINE = ggplot(final_table, aes(x=genome_sizes_scaled, y=SINES_fractions )) + geom_point(aes(colour = populations))+ geom_smooth(method=lm,formula=y ~ x) + ggtitle("") +labs(x = "Genome size (Mb)", y = "SINES fraction")+ scale_colour_manual(values = levels(final_table$colours)) +theme_bw(base_size = 18)+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+ theme(legend.position='none')
+corelation_DNA = ggplot(final_table, aes(x=genome_sizes_scaled, y=DNA_fractions )) + geom_point(aes(colour = populations))+ geom_smooth(method=lm,formula=y ~ x) + ggtitle("") +labs(x = "Genome size (Mb)", y = "DNA fraction")+ scale_colour_manual(values = levels(final_table$colours)) +theme_bw(base_size = 18)+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+ theme(legend.position='none')
+corelation_Helitron = ggplot(final_table, aes(x=genome_sizes_scaled, y=Helitron_fractions )) + geom_point(aes(colour = populations))+ geom_smooth(method=lm,formula=y ~ x) + ggtitle("") +labs(x = "Genome size (Mb)", y = "Helitron fraction")+ scale_colour_manual(values = levels(final_table$colours)) +theme_bw(base_size = 18)+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())+ theme(legend.position='none')
+
+
+
+#corelation_SINEvsLINE = ggplot(final_table, aes(x=LINES_fractions, y=SINES_fractions )) + geom_point(aes(colour = population))+ geom_smooth(method=lm,formula=y ~ x) + ggtitle("SINES vs LINES") 
+#autoplot(prcomp(log(pca.data[, 1:3])), data = pca.data, colour = "final_table.population", frame = TRUE, frame.type='norm')+ggtitle("") + scale_colour_manual(values = c( "#C8C800","#006400","#FF8C00","#0000FF","#FF0000","#C04000")) +scale_fill_manual(values = c( "#C8C800","#006400","#FF8C00","#0000FF","#FF0000","#C04000")) + guides(colour=FALSE, fill=FALSE)+ theme_bw(base_size = 18)
+pca_guide=autoplot(prcomp(log(pca.data[, 1:5])), data = pca.data, colour = "final_table.population", loadings = TRUE,loadings.label = TRUE,frame = TRUE, shape = FALSE, label.size = 3)+ggtitle("") + scale_colour_manual(values = c("#C8C800","#006400","#FF8C00","#0000FF","#FF0000","#C04000")) + scale_fill_manual(values = c( "#C8C800","#006400","#FF8C00","#0000FF","#FF0000","#C04000")) + guides(colour=FALSE ,fill=FALSE)+ theme_bw(base_size = 18)+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+pca=autoplot(prcomp(log(pca.data[, 1:5])), data = pca.data, colour = "final_table.population",frame = TRUE)+ggtitle("") + scale_colour_manual(values = c( "#C8C800","#006400","#FF8C00","#0000FF","#FF0000","#C04000")) + scale_fill_manual(values = c( "#C8C800","#006400","#FF8C00","#0000FF","#FF0000","#C04000")) + guides(colour=FALSE ,fill=FALSE)+ theme_bw(base_size = 18)+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+framed_juvernica=autoplot(prcomp(log(juvernica[, 1:5])), data = juvernica, colour = "final_table.population",frame = TRUE)+ggtitle("") + scale_colour_manual(values = c( "#C8C800","#006400")) + scale_fill_manual(values = c( "#C8C800","#006400")) + guides(colour=FALSE ,fill=FALSE)+ theme_bw(base_size = 18)+ theme_bw(base_size = 18)+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+
+write.csv(final_table ,'/home/venkat/glob/genome_size/final_table')
+write.csv(juvernica ,'/home/venkat/glob/genome_size/juvernica')
+
+
+
+boxplot_LTR
+boxplot_LINE
+boxplot_SINE
+corelation_LTR
+corelation_LINE
+corelation_SINE
+
+
+
+#multiplot(boxplot, boxplot_LINE, boxplot_SINE, corelation_LINE, corelation_SINE, framed, cols=3)
+
+
+
+
+
+
 #autoplot(prcomp(log(juvernica[, 1:3])), data = juvernica, colour = "final_table.population", frame = TRUE, frame.type = 'norm')
-framed_juvernica = autoplot(prcomp(log(juvernica[, 1:4])), data = juvernica, colour = "final_table.population", frame = TRUE)+ggtitle("PCA for Juvernica populations ")
-framed_all = autoplot(prcomp(log(pca.data[, 1:4])), data = pca.data, colour = "final_table.population", frame = TRUE)+ggtitle("PCA for all populations ")
-PCA_no_GS_JUV= autoplot(prcomp(log(juvernica[, 1:3])), data = juvernica, colour = "final_table.population", frame = TRUE)+ggtitle("PCA for juvernica populations (without genome size)")
-PCA_no_GS_ALL= autoplot(prcomp(log(pca.data[, 1:3])), data = pca.data, colour = "final_table.population", frame = TRUE)+ggtitle("PCA for all populations (without genome size) ")
+#framed_juvernica = autoplot(prcomp(log(juvernica[, 1:3])), data = juvernica, colour = "final_table.population", frame = TRUE)+ggtitle("PCA for Juvernica populations ")
+#autoplot(prcomp(log(pca.data[, 1:3])), data =framed_juvernica , colour = "final_table.population", frame = TRUE, frame.type='norm')
 
-multiplot(framed_juvernica, framed_all, PCA_no_GS_JUV, PCA_no_GS_ALL)
+framed
 
-multiplot(boxplot, boxplot_LINE, boxplot_SINE, boxplot_SINE, corelation_LINE, corelation_SINE, corelation_all, framed_all, cols=4)
+
+pdf(file= 'myOut_land.pdf' ,onefile=T,paper='A4', )
+for (i in 1){
+  plot(boxplot)
+  plot(boxplot_LTR)
+  plot(boxplot_LINE)
+  plot(boxplot_SINE)
+  plot(boxplot_DNA)
+  plot(boxplot_Helitron)
+  plot(corelation_LTR)
+  plot(corelation_LINE)
+  plot(corelation_SINE)
+  plot(corelation_DNA)
+  plot(corelation_Helitron)
+  plot(pca_guide)
+  plot(pca)
+  plot(framed_juvernica)
+}
+dev.off()
 
