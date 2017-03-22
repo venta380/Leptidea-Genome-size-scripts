@@ -23,6 +23,6 @@ Dependencies: R libraries ggplot2, ggfortify, cluster, grid
 
 
 # genome_size_newdata_trimmed_K17_subsample_1.zip
-Raw outputs and preprocessing .histo files for each sample with R script and unscaled genome sizes. 
+Raw outputs and preprocessing files, .histo files for each sample with R scripts and unscaled genome sizes. 
 
 
