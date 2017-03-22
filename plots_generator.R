@@ -1,5 +1,5 @@
-kmer<-read.table(file='/proj/b2014034/nobackup/jellyfish_genome_size_predict/genome_size_newdata_trimmed_K17_subsample_2/test.hist', header=FALSE)
-sample_details<-read.table(file='/proj/b2014034/nobackup/jellyfish_genome_size_predict/genome_size_newdata_trimmed_K17_subsample_2/reads.txt', header=FALSE)
+kmer<-read.table(file='./test.hist', header=FALSE)
+sample_details<-read.table(file='./reads.txt', header=FALSE)
 K=17
 # Multiple plot function
 #
@@ -277,7 +277,7 @@ boxplot1
 
 
 
-ALL_R<-read.table(file='/proj/b2014034/private/repeats/ALL_R.txt', header=FALSE)
+ALL_R<-read.table(file='.Repeats.txt', header=FALSE)
 
 
 library(ggplot2)
@@ -341,8 +341,8 @@ pca_guide=autoplot(prcomp(log(pca.data[, 1:5])), data = pca.data, colour = "fina
 pca=autoplot(prcomp(log(pca.data[, 1:5])), data = pca.data, colour = "final_table.population",frame = TRUE)+ggtitle("") + scale_colour_manual(values = c( "#C8C800","#006400","#FF8C00","#0000FF","#FF0000","#C04000")) + scale_fill_manual(values = c( "#C8C800","#006400","#FF8C00","#0000FF","#FF0000","#C04000")) + guides(colour=FALSE ,fill=FALSE)+ theme_bw(base_size = 18)+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 framed_juvernica=autoplot(prcomp(log(juvernica[, 1:5])), data = juvernica, colour = "final_table.population",frame = TRUE)+ggtitle("") + scale_colour_manual(values = c( "#C8C800","#006400")) + scale_fill_manual(values = c( "#C8C800","#006400")) + guides(colour=FALSE ,fill=FALSE)+ theme_bw(base_size = 18)+ theme_bw(base_size = 18)+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 
-write.csv(final_table ,'/home/venkat/glob/genome_size/final_table')
-write.csv(juvernica ,'/home/venkat/glob/genome_size/juvernica')
+write.csv(final_table ,'.final_table')
+write.csv(juvernica ,'.juvernica')
 
 
 
