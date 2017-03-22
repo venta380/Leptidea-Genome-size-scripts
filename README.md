@@ -1,8 +1,8 @@
-# Genome size scripts
+# Genome_size_scripts
 Leptidea genome_size_scripts
 
 # jellyfish.sh
-This is the script bares the code used to generate individual histogram files for each sample. This script uses the fastq files provided in the project repository. The final output of this script gives a histogram file(.hist) for each sample which will then be used for genome size estimates using the R script “plots_generator.R”
+This is the script bares the code used to generate individual histogram files for each sample. This script uses the fastq files provided in the project repository. This script was run on 16 cores using K-mer length as 17. The final output of this script gives a histogram file(.hist) for each sample which will then be used for genome size estimates using the R script “plots_generator.R”
 Dependencies: Jellyfish software. 
 
 # reads.txt
