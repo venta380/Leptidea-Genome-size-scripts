@@ -2,7 +2,7 @@
 Leptidea genome size scripts
 # Pipeline
 1. Raw reads are first trimmed using the script "trimming.sh"
-2. K-mers are counted and converted to histogram by using the script "jellyfish.sh". This script also uses the the subsampling program "seqtk -sample" to subsample the reads to approximately 5X coverage. This scripts will give us the .histo "files" provided in genome_size_newdata_trimmed_K17_subsample_1.zip
+2. K-mers are counted and converted to histogram by using the script "jellyfish.sh". This script also uses the the subsampling program "sample" to subsample the reads to approximately 5X coverage. This scripts will give us the .histo "files" provided in genome_size_newdata_trimmed_K17_subsample_1.zip
 3. These files are then concatenated to one file called test.hist to be used in the Rscript plots_generator.R
 4. "plots_generator.R" is then run using R to obtain the genome size estimates and plots.
 # jellyfish.sh
