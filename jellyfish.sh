@@ -4,7 +4,7 @@ module load bioinfo-tools
 module load jellyfish
 
 mkdir $TMPDIR/jelly
-output="/proj/b2014034/nobackup/jellyfish_genome_size_predict/genome_size_newdata_trimmed_K17_subsample_2/"
+output="/proj/b2014034/nobackup/jellyfish_genome_size_predict/genome_size_newdata_trimmed_K17_subsample_1/"
 mkdir $output
 subsample="/home/venkat/bin/sample-master/sample"
 outdir=$TMPDIR/jelly
