@@ -29,5 +29,5 @@ Dependencies: R libraries ggplot2, ggfortify, cluster, grid
 # genome_size_newdata_trimmed_K17_subsample_1.zip
 Raw outputs and preprocessing files, .histo files for each sample with R scripts and unscaled genome sizes. 
 
-# percentage_of genome_alignment to_itself.py
+# percentage_of genome_alignment_to_itself.py
 This gives the percentage of genome aligning to itself.
