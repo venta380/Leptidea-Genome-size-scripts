@@ -30,7 +30,7 @@ Dependencies: R libraries ggplot2, ggfortify, cluster, grid
 Raw outputs and preprocessing files, .histo files for each sample with R scripts and unscaled genome sizes. 
 
 # percentage_of genome_alignment_to_itself.py
-This gives the percentage of genome aligning to itself. This file takes the reference genome (.fasta) file and and the Blast output in format 6.
+This gives the percentage of genome aligning to itself. This file takes the reference genome (.fasta) file and and the Blast output of the genome alignment to itself in format 6.
 # repeat_family directory
 This directory contains the repeat subclasses and superfamiles for each buterfly genome. 
 
